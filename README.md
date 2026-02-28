@@ -1,62 +1,40 @@
 # firetv-mood-wall
 
-Fullscreen **Mood Wall** for Fire Stick TV using a static GitHub Pages site.
+Fullscreen **Mood Wall** para Fire TV via GitHub Pages.
 
-It shows the latest mood artwork, mood text, caption, and update timestamp.
-The frontend auto-refreshes `state.json` every **60 seconds**.
+Agora o update de mood tenta gerar **arte única com OpenAI Images API** (modelo padrão `gpt-image-1`).
+Se falhar, usa fallback `picsum`.
 
-## Project structure
+## Estrutura
+- `docs/index.html` — tela fullscreen
+- `docs/styles.css` — visual minimal/artístico
+- `docs/app.js` — recarrega `state.json` a cada 60s
+- `docs/state.json` — estado atual
+- `docs/generated/` — imagens geradas localmente (commitadas)
+- `scripts/update-mood.js` — atualiza mood + gera arte
 
-- `docs/index.html` — fullscreen page
-- `docs/styles.css` — artistic/minimal styling
-- `docs/app.js` — loads and refreshes mood state every 60s
-- `docs/state.json` — current mood + image metadata
-- `scripts/update-mood.js` — CLI script to update mood state
-- `INSTRUCOES.md` — quick instructions in Portuguese
-
-## Chat command format
-
-The update flow is designed for commands in this format:
+## Trigger
+Formato de comando:
 
 ```text
-Mood: <text>
+Mood: <texto>
 ```
 
-Example:
-
-```text
-Mood: cinematic blue rain
-```
-
-You can pass that directly to the script.
-
-## Update mood (manual)
-
-From project root:
-
+## Uso
 ```bash
-node scripts/update-mood.js "Mood: cinematic blue rain"
+node scripts/update-mood.js "Mood: kootenays winter"
 ```
 
-Optional explicit mode:
-
+Opções úteis:
 ```bash
-node scripts/update-mood.js --mood "cinematic blue rain" --caption "Neon reflections and slow city pulse." --image "https://images.unsplash.com/..."
+node scripts/update-mood.js --mood "rasta vibes" --caption "No rush, just flow"
+node scripts/update-mood.js --mood "night drive" --model gpt-image-1 --size 1536x1024 --quality high
+node scripts/update-mood.js --mood "fallback mode" --fallback
 ```
 
-If `--image` is not provided, a mood-based Unsplash Source URL is generated automatically.
+## Requisitos
+- `OPENAI_API_KEY` no ambiente (para geração com OpenAI)
+- Sem chave, cai automaticamente no fallback
 
-## Publish to GitHub Pages
-
-1. Create a GitHub repository and push this project.
-2. In repo settings, enable **Pages**.
-3. Set source to:
-   - Branch: `main` (or your default branch)
-   - Folder: `/docs`
-4. Open your Pages URL on Fire TV browser.
-
-## Fire TV tips
-
-- Keep browser in fullscreen mode.
-- Use static URL to avoid remote input friction.
-- The page refreshes state automatically every 60 seconds, no manual reload needed.
+## Deploy
+- GitHub Pages: branch `main`, pasta `/docs`

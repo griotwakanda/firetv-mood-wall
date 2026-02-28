@@ -1,7 +1,8 @@
 {
   "mood": "kootenays winter",
   "caption": "Mood set to “kootenays winter”.",
-  "imageUrl": "https://picsum.photos/seed/kootenays-winter/1920/1080",
-  "updatedAt": "2026-02-28T08:16:19.715Z",
-  "command": "Mood: kootenays winter"
+  "imageUrl": "./generated/1772266874942-kootenays-winter.png",
+  "updatedAt": "2026-02-28T08:20:21.060Z",
+  "command": "Mood: kootenays winter",
+  "imageEngine": "openai"
 }
