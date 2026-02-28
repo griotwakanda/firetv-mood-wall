@@ -1,8 +1,8 @@
 {
-  "mood": "kootenays winter",
-  "caption": "Mood set to “kootenays winter”.",
-  "imageUrl": "./generated/1772266874942-kootenays-winter.png",
-  "updatedAt": "2026-02-28T08:20:21.060Z",
-  "command": "Mood: kootenays winter",
+  "mood": "uma arte que represente gado",
+  "caption": "Força, terra e visão: a inteligência do campo em movimento.",
+  "imageUrl": "./generated/1772271061298-uma-arte-que-represente-gado.png",
+  "updatedAt": "2026-02-28T09:30:10.894Z",
+  "command": "Mood: uma arte que represente gado",
   "imageEngine": "openai"
 }
