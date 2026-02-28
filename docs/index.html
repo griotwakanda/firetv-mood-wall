@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FireTV Mood Wall</title>
+    <meta name="description" content="Fullscreen mood artwork wall for Fire TV" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main id="wall" class="wall" aria-live="polite">
+      <div class="bg" id="bg"></div>
+      <div class="veil"></div>
+
+      <section class="content">
+        <p class="kicker">Current mood</p>
+        <h1 id="moodText">Loading mood…</h1>
+        <p id="captionText" class="caption"></p>
+        <p id="timestampText" class="timestamp"></p>
+      </section>
+
+      <div class="refresh-dot" title="Auto-refresh every 60 seconds"></div>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
