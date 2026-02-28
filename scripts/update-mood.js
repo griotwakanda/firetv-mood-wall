@@ -55,10 +55,12 @@ function parseArgs(argv) {
   return out;
 }
 
-function randomUnsplashUrl(mood) {
-  const q = encodeURIComponent(mood || 'abstract mood art');
-  const sig = Date.now();
-  return `https://source.unsplash.com/1920x1080/?${q}&sig=${sig}`;
+function deterministicMoodImageUrl(mood) {
+  const seed = (mood || 'abstract-mood-art')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'abstract-mood-art';
+  return `https://picsum.photos/seed/${seed}/1920/1080`;
 }
 
 function usageAndExit() {
@@ -75,7 +77,7 @@ function main() {
   const state = {
     mood: parsed.mood,
     caption: parsed.caption || `Mood set to “${parsed.mood}”.`,
-    imageUrl: parsed.imageUrl || randomUnsplashUrl(parsed.mood),
+    imageUrl: parsed.imageUrl || deterministicMoodImageUrl(parsed.mood),
     updatedAt: now,
     command: parsed.command || `Mood: ${parsed.mood}`
   };
