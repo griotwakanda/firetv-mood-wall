@@ -80,9 +80,12 @@ function deterministicMoodImageUrl(mood) {
 function buildPrompt(mood) {
   return [
     `Create an original digital artwork for this mood: "${mood}".`,
-    'Style: cinematic, artistic, expressive, non-generic, emotionally coherent.',
-    'Composition: clean focal hierarchy suitable for fullscreen TV display.',
-    'Lighting: dramatic but soft, high depth, rich atmosphere.',
+    'Style: beautiful, uplifting, artful, emotionally rich, premium, non-generic, visually pleasing for a room ambience display.',
+    'Allow variety in style when it suits the mood: cinematic scene, elegant digital art, soft surrealism, modern illustration, lush ambient environment, luminous abstract realism, or optimistic futuristic composition.',
+    'Avoid defaulting to dark, muddy, obscure oil-painting aesthetics unless the mood clearly asks for something heavy or nocturnal.',
+    'Composition: clean focal hierarchy suitable for fullscreen TV display, with depth and beauty from a distance.',
+    'Lighting: luminous, warm or vibrant when appropriate, with graceful contrast and a positive atmospheric presence.',
+    'The result should bring good energy to the environment while staying emotionally coherent with the mood.',
     'Do not include text, logos, signatures, watermarks, or UI elements.'
   ].join(' ');
 }
