@@ -1,7 +1,6 @@
 const REFRESH_MS = 60_000;
 const STATE_URL = './state.json';
 
-const moodText = document.getElementById('moodText');
 const captionText = document.getElementById('captionText');
 const timestampText = document.getElementById('timestampText');
 const bg = document.getElementById('bg');
@@ -21,12 +20,10 @@ function fmtTimestamp(input) {
 }
 
 function applyState(state) {
-  const mood = state?.mood || 'Untitled mood';
   const caption = state?.caption || '';
   const imageUrl = state?.imageUrl || '';
   const updatedAt = state?.updatedAt || state?.timestamp;
 
-  moodText.textContent = mood;
   captionText.textContent = caption;
   captionText.style.display = caption ? 'block' : 'none';
   timestampText.textContent = `Updated ${fmtTimestamp(updatedAt)}`;
@@ -45,7 +42,6 @@ async function loadState() {
     const data = await response.json();
     applyState(data);
   } catch (err) {
-    moodText.textContent = 'Mood wall temporarily unavailable';
     captionText.style.display = 'none';
     timestampText.textContent = `Error loading state (${err.message})`;
     console.error(err);

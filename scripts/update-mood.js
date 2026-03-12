@@ -87,6 +87,34 @@ function buildPrompt(mood) {
   ].join(' ');
 }
 
+function autoCaptionFromMood(mood) {
+  const stopwords = new Set([
+    'a','an','the','and','or','but','for','nor','so','yet','to','of','on','in','at','by','with','from','into','over','under',
+    'some','that','this','there','here','you','your','yours','we','our','ours','they','their','them','it','its','is','are',
+    'be','been','being','get','got','just','full','tonight','prepare','focus'
+  ]);
+
+  const words = String(mood || '')
+    .replace(/[—–-]/g, ' ')
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((word) => !stopwords.has(word));
+
+  const picked = [];
+  for (const word of words) {
+    if (!picked.includes(word)) picked.push(word);
+    if (picked.length === 2) break;
+  }
+
+  const finalWords = picked.length ? picked : String(mood || '').split(/\s+/).filter(Boolean).slice(0, 2);
+  return finalWords
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ') || 'Mood Glow';
+}
+
 async function generateWithOpenAI({ mood, model, size, quality }) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error('OPENAI_API_KEY is not set');
@@ -175,7 +203,7 @@ async function main() {
 
   const state = {
     mood: parsed.mood,
-    caption: parsed.caption || `Mood set to “${parsed.mood}”.`,
+    caption: parsed.caption || autoCaptionFromMood(parsed.mood),
     imageUrl: finalImageUrl,
     updatedAt: now,
     command: parsed.command || `Mood: ${parsed.mood}`,
