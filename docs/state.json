@@ -1,8 +1,8 @@
 {
-  "mood": "focus on delivery, prepare to launch",
-  "caption": "Almost there",
-  "imageUrl": "./generated/1773280856148-focus-on-delivery-prepare-to-launch.png",
-  "updatedAt": "2026-03-12T02:00:05.360Z",
-  "command": "Mood: focus on delivery, prepare to launch",
+  "mood": "Get some rest! You shipped a full production deploy tonight — that's a big win 🚀🐂",
+  "caption": "Mood set to “Get some rest! You shipped a full production deploy tonight — that's a big win 🚀🐂”.",
+  "imageUrl": "./generated/1773298203157-get-some-rest-you-shipped-a-full-production-deploy-tonight-that-s-a-big-win.png",
+  "updatedAt": "2026-03-12T06:49:13.236Z",
+  "command": "Mood: Get some rest! You shipped a full production deploy tonight — that's a big win 🚀🐂",
   "imageEngine": "openai"
 }
