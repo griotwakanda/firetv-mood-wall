@@ -80,12 +80,16 @@ function deterministicMoodImageUrl(mood) {
 function buildPrompt(mood) {
   return [
     `Create an original digital artwork for this mood: "${mood}".`,
-    'Style: beautiful, uplifting, artful, emotionally rich, premium, non-generic, visually pleasing for a room ambience display.',
-    'Allow variety in style when it suits the mood: cinematic scene, elegant digital art, soft surrealism, modern illustration, lush ambient environment, luminous abstract realism, or optimistic futuristic composition.',
+    'Style: artful, expressive, emotionally rich, visually striking, and beautiful enough to elevate a room.',
+    'Lean toward imaginative fine-art energy rather than corporate illustration or predictable wallpaper.',
+    'Draw inspiration from surrealism, cubist boldness, architectural fantasy, lyrical street-art color, dreamlike symbolism, and emotionally intelligent visual poetry — the spirit of artists like Dalí, Picasso, Gaudí, Os Gêmeos, and other iconic expressive creators — without copying any single artwork or artist directly.',
+    'Prefer metaphor, symbolism, distortion, layered meaning, poetic color, and surprising composition over literal representation.',
+    'Allow the image to feel alive, inventive, warm, optimistic, and culturally rich when appropriate.',
+    'Avoid generic corporate scenes, obvious stock-like symbolism, bland motivational visuals, or overly literal depictions of the prompt.',
     'Avoid defaulting to dark, muddy, obscure oil-painting aesthetics unless the mood clearly asks for something heavy or nocturnal.',
-    'Composition: clean focal hierarchy suitable for fullscreen TV display, with depth and beauty from a distance.',
-    'Lighting: luminous, warm or vibrant when appropriate, with graceful contrast and a positive atmospheric presence.',
-    'The result should bring good energy to the environment while staying emotionally coherent with the mood.',
+    'Composition: strong focal poetry for a fullscreen TV display, with beauty, depth, and intrigue from a distance.',
+    'Lighting: luminous, graceful, and atmospheric, with expressive contrast and emotional color.',
+    'The result should feel like real art, not just a polished illustration.',
     'Do not include text, logos, signatures, watermarks, or UI elements.'
   ].join(' ');
 }
