@@ -7,6 +7,40 @@
       "generatedAt": "2026-03-20T20:08:11.486Z",
       "imageUrl": "https://picsum.photos/seed/varied-art-direction-verification-warm-intelligent-room-energy/1920/1080",
       "engine": "fallback-picsum"
+    },
+    {
+      "key": "fantasy-folk-organic",
+      "styleKey": "fantasy-folk-organic",
+      "label": "fantasy folk organic",
+      "compositionKey": "asymmetric-tension",
+      "compositionLabel": "asymmetric tension",
+      "paletteKey": "mineral-cool",
+      "paletteLabel": "mineral cool palette",
+      "lightingKey": "golden-hour",
+      "lightingLabel": "golden-hour radiance",
+      "renderModeKey": "painterly",
+      "renderModeLabel": "painterly rendering",
+      "mood": "warm strategic launch energy for the room",
+      "generatedAt": "2026-03-20T20:12:00.559Z",
+      "imageUrl": "https://picsum.photos/seed/warm-strategic-launch-energy-for-the-room/1920/1080",
+      "engine": "fallback-picsum"
+    },
+    {
+      "key": "minimal-premium-architectural",
+      "styleKey": "minimal-premium-architectural",
+      "label": "minimal premium architectural",
+      "compositionKey": "layered-depth",
+      "compositionLabel": "layered depthscape",
+      "paletteKey": "sunset-embers",
+      "paletteLabel": "sunset embers palette",
+      "lightingKey": "soft-diffused",
+      "lightingLabel": "soft diffused light",
+      "renderModeKey": "mixed-media",
+      "renderModeLabel": "mixed-media rendering",
+      "mood": "calm focused builder momentum with depth",
+      "generatedAt": "2026-03-20T20:12:00.687Z",
+      "imageUrl": "https://picsum.photos/seed/calm-focused-builder-momentum-with-depth/1920/1080",
+      "engine": "fallback-picsum"
     }
   ]
 }

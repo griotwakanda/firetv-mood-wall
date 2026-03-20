@@ -90,6 +90,17 @@ function writeStyleHistory(history) {
   fs.writeFileSync(STYLE_HISTORY_PATH, `${JSON.stringify(history, null, 2)}\n`, 'utf8');
 }
 
+function hashString(input) {
+  return Array.from(String(input || '')).reduce((acc, ch, idx) => acc + ch.charCodeAt(0) * (idx + 1), 0);
+}
+
+function pickVariant(list, seed, recentValues = []) {
+  const blocked = new Set(recentValues.filter(Boolean));
+  const pool = list.filter((item) => !blocked.has(item.key));
+  const available = pool.length ? pool : list;
+  return available[seed % available.length];
+}
+
 function chooseStyleDirection(mood) {
   const directions = [
     {
@@ -136,38 +147,84 @@ function chooseStyleDirection(mood) {
     }
   ];
 
-  const history = readStyleHistory();
-  const recentKeys = new Set((history.recent || []).slice(-3).map((x) => x.key));
-  const pool = directions.filter((d) => !recentKeys.has(d.key));
-  const available = pool.length ? pool : directions;
+  const compositions = [
+    { key: 'wide-cinematic', label: 'wide cinematic composition', traits: 'expansive framing, horizon drama, environmental storytelling' },
+    { key: 'intimate-close-focus', label: 'intimate close focus', traits: 'closer subject intimacy, tactile detail, emotional immediacy' },
+    { key: 'asymmetric-tension', label: 'asymmetric tension', traits: 'off-center balance, daring negative space, dynamic visual pull' },
+    { key: 'layered-depth', label: 'layered depthscape', traits: 'foreground-midground-background rhythm, spatial richness, immersive depth' },
+    { key: 'totemic-centered', label: 'totemic centered iconography', traits: 'heroic centered symbol, ceremonial presence, graphic force' }
+  ];
 
-  const seed = Array.from(String(mood || '')).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  const picked = available[seed % available.length];
-  return { picked, history };
+  const palettes = [
+    { key: 'sunset-embers', label: 'sunset embers palette', traits: 'burnt orange, coral, deep gold, warm magenta' },
+    { key: 'mineral-cool', label: 'mineral cool palette', traits: 'slate blue, jade, silver-gray, mist tones' },
+    { key: 'tropical-electric', label: 'tropical electric palette', traits: 'teal, fuchsia, solar yellow, vivid green' },
+    { key: 'earth-luxe', label: 'earth luxe palette', traits: 'ochre, clay, espresso, sand, muted copper' },
+    { key: 'moonlit-neon', label: 'moonlit neon palette', traits: 'indigo, violet, cyan glow, black plum' }
+  ];
+
+  const lightingModes = [
+    { key: 'soft-diffused', label: 'soft diffused light', traits: 'gentle glow, calm atmosphere, elegant softness' },
+    { key: 'high-contrast', label: 'high-contrast dramatic light', traits: 'sharp light-play, vivid contrast, sculpted depth' },
+    { key: 'backlit-aura', label: 'backlit aura', traits: 'halo edges, luminous silhouettes, spiritual glow' },
+    { key: 'golden-hour', label: 'golden-hour radiance', traits: 'late-day warmth, emotional richness, honeyed atmosphere' },
+    { key: 'nocturne-luminous', label: 'nocturne luminous light', traits: 'night mood, glowing accents, elegant darkness' }
+  ];
+
+  const renderModes = [
+    { key: 'painterly', label: 'painterly rendering', traits: 'visible brush energy, textural surfaces, hand-made richness' },
+    { key: 'graphic-clean', label: 'graphic clean rendering', traits: 'crisp shapes, sharp design clarity, poster-like confidence' },
+    { key: 'mixed-media', label: 'mixed-media rendering', traits: 'collage feel, layered marks, tactile experimentation' },
+    { key: 'soft-atmospheric', label: 'soft atmospheric rendering', traits: 'misty transitions, dreamy softness, airy emotion' }
+  ];
+
+  const history = readStyleHistory();
+  const recent = (history.recent || []).slice(-4);
+  const seed = hashString(mood);
+
+  const picked = pickVariant(directions, seed, recent.map((x) => x.styleKey || x.key));
+  const composition = pickVariant(compositions, seed * 3 + 7, recent.map((x) => x.compositionKey));
+  const palette = pickVariant(palettes, seed * 5 + 11, recent.map((x) => x.paletteKey));
+  const lighting = pickVariant(lightingModes, seed * 7 + 13, recent.map((x) => x.lightingKey));
+  const renderMode = pickVariant(renderModes, seed * 11 + 17, recent.map((x) => x.renderModeKey));
+
+  return { picked, composition, palette, lighting, renderMode, history };
 }
 
 function buildPrompt(mood) {
-  const { picked, history } = chooseStyleDirection(mood);
-  const recentStyleText = (history.recent || []).slice(-3).map((x) => x.label).join(', ');
+  const { picked, composition, palette, lighting, renderMode, history } = chooseStyleDirection(mood);
+  const recent = (history.recent || []).slice(-4);
+  const recentStyleText = recent.map((x) => x.label).join(', ');
+  const recentCompositionText = recent.map((x) => x.compositionLabel).filter(Boolean).join(', ');
+  const recentPaletteText = recent.map((x) => x.paletteLabel).filter(Boolean).join(', ');
   return {
     prompt: [
       `Create an original digital artwork for this mood: "${mood}".`,
       `Primary visual direction: ${picked.label}.`,
       `Use the spirit of these reference artists or creators for variation and energy: ${picked.artists.join(', ')}. Do not copy any single artwork directly.`,
-      `Key traits: ${picked.traits}.`,
-      'Create something that feels genuinely different from recent generations, with a fresh visual language, not a near-duplicate composition or palette.',
+      `Core style traits: ${picked.traits}.`,
+      `Composition mode: ${composition.label}. Traits: ${composition.traits}.`,
+      `Palette mode: ${palette.label}. Traits: ${palette.traits}.`,
+      `Lighting mode: ${lighting.label}. Traits: ${lighting.traits}.`,
+      `Rendering mode: ${renderMode.label}. Traits: ${renderMode.traits}.`,
+      'Create something that feels genuinely different from recent generations, with a fresh visual language, not a near-duplicate composition, palette, lighting, or rendering treatment.',
       recentStyleText ? `Avoid drifting back into these recent style directions: ${recentStyleText}.` : '',
+      recentCompositionText ? `Avoid reusing these recent composition habits: ${recentCompositionText}.` : '',
+      recentPaletteText ? `Avoid repeating these recent palette families: ${recentPaletteText}.` : '',
       'Lean toward imaginative fine-art energy rather than corporate illustration or predictable wallpaper.',
       'Prefer metaphor, symbolism, distortion, layered meaning, poetic color, and surprising composition over literal representation.',
       'Allow the image to feel alive, inventive, warm, optimistic, and culturally rich when appropriate.',
       'Avoid generic corporate scenes, obvious stock-like symbolism, bland motivational visuals, or overly literal depictions of the prompt.',
       'Avoid defaulting to the same dark moody painterly look, the same centered composition, or the same visual recipe across generations.',
-      'Composition: strong focal poetry for a fullscreen TV display, with beauty, depth, and intrigue from a distance.',
-      'Lighting: expressive and atmospheric, but different each time depending on the chosen visual direction.',
+      'For a fullscreen TV display, prioritize beauty from a distance plus interesting detail up close.',
       'The result should feel like real art, not just a polished illustration.',
       'Do not include text, logos, signatures, watermarks, or UI elements.'
     ].filter(Boolean).join(' '),
     styleDirection: picked,
+    composition,
+    palette,
+    lighting,
+    renderMode,
     history
   };
 }
@@ -253,7 +310,11 @@ async function generateWithOpenAI({ mood, model, size, quality }) {
   return {
     imageUrl: `./generated/${filename}`,
     engine: 'openai',
-    styleDirection: built.styleDirection.label
+    styleDirection: built.styleDirection.label,
+    composition: built.composition,
+    palette: built.palette,
+    lighting: built.lighting,
+    renderMode: built.renderMode
   };
 }
 
@@ -267,6 +328,10 @@ async function main() {
   let finalImageUrl = parsed.imageUrl;
   let engine = 'manual';
   let styleDirection = builtDirection.styleDirection?.label || 'manual';
+  let compositionLabel = builtDirection.composition?.label || 'manual';
+  let paletteLabel = builtDirection.palette?.label || 'manual';
+  let lightingLabel = builtDirection.lighting?.label || 'manual';
+  let renderModeLabel = builtDirection.renderMode?.label || 'manual';
 
   if (!finalImageUrl) {
     if (!parsed.forceFallback) {
@@ -280,6 +345,10 @@ async function main() {
         finalImageUrl = generated.imageUrl;
         engine = generated.engine;
         styleDirection = generated.styleDirection || styleDirection;
+        compositionLabel = generated.composition?.label || compositionLabel;
+        paletteLabel = generated.palette?.label || paletteLabel;
+        lightingLabel = generated.lighting?.label || lightingLabel;
+        renderModeLabel = generated.renderMode?.label || renderModeLabel;
       } catch (err) {
         console.warn(`[update-mood] OpenAI generation failed, falling back to picsum: ${err.message}`);
       }
@@ -294,12 +363,21 @@ async function main() {
   const history = readStyleHistory();
   history.recent = [...(history.recent || []), {
     key: (builtDirection.styleDirection && builtDirection.styleDirection.key) || slugify(styleDirection),
+    styleKey: (builtDirection.styleDirection && builtDirection.styleDirection.key) || slugify(styleDirection),
     label: styleDirection,
+    compositionKey: (builtDirection.composition && builtDirection.composition.key) || slugify(compositionLabel),
+    compositionLabel,
+    paletteKey: (builtDirection.palette && builtDirection.palette.key) || slugify(paletteLabel),
+    paletteLabel,
+    lightingKey: (builtDirection.lighting && builtDirection.lighting.key) || slugify(lightingLabel),
+    lightingLabel,
+    renderModeKey: (builtDirection.renderMode && builtDirection.renderMode.key) || slugify(renderModeLabel),
+    renderModeLabel,
     mood: parsed.mood,
     generatedAt: now,
     imageUrl: finalImageUrl,
     engine
-  }].slice(-6);
+  }].slice(-8);
   writeStyleHistory(history);
 
   const state = {
@@ -309,7 +387,11 @@ async function main() {
     updatedAt: now,
     command: parsed.command || `Mood: ${parsed.mood}`,
     imageEngine: engine,
-    styleDirection
+    styleDirection,
+    composition: compositionLabel,
+    palette: paletteLabel,
+    lighting: lightingLabel,
+    renderMode: renderModeLabel
   };
 
   fs.writeFileSync(STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, 'utf8');
@@ -320,6 +402,10 @@ async function main() {
   console.log(`- Image: ${state.imageUrl}`);
   console.log(`- Engine: ${state.imageEngine}`);
   console.log(`- Style: ${state.styleDirection}`);
+  console.log(`- Composition: ${state.composition}`);
+  console.log(`- Palette: ${state.palette}`);
+  console.log(`- Lighting: ${state.lighting}`);
+  console.log(`- Render: ${state.renderMode}`);
   console.log(`- Updated: ${state.updatedAt}`);
 }
 

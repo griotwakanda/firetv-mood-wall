@@ -1,9 +1,13 @@
 {
-  "mood": "varied art direction verification warm intelligent room energy",
-  "caption": "Varied Art",
-  "imageUrl": "https://picsum.photos/seed/varied-art-direction-verification-warm-intelligent-room-energy/1920/1080",
-  "updatedAt": "2026-03-20T20:08:11.486Z",
-  "command": "Mood: varied art direction verification warm intelligent room energy",
+  "mood": "calm focused builder momentum with depth",
+  "caption": "Calm Focused",
+  "imageUrl": "https://picsum.photos/seed/calm-focused-builder-momentum-with-depth/1920/1080",
+  "updatedAt": "2026-03-20T20:12:00.687Z",
+  "command": "Mood: calm focused builder momentum with depth",
   "imageEngine": "fallback-picsum",
-  "styleDirection": "modernist color poetry"
+  "styleDirection": "minimal premium architectural",
+  "composition": "layered depthscape",
+  "palette": "sunset embers palette",
+  "lighting": "soft diffused light",
+  "renderMode": "mixed-media rendering"
 }
