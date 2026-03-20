@@ -7,6 +7,7 @@ const ROOT = path.resolve(__dirname, '..');
 const DOCS_DIR = path.join(ROOT, 'docs');
 const GENERATED_DIR = path.join(DOCS_DIR, 'generated');
 const STATE_PATH = path.join(DOCS_DIR, 'state.json');
+const STYLE_HISTORY_PATH = path.join(DOCS_DIR, 'style-history.json');
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -77,21 +78,98 @@ function deterministicMoodImageUrl(mood) {
   return `https://picsum.photos/seed/${seed}/1920/1080`;
 }
 
+function readStyleHistory() {
+  try {
+    return JSON.parse(fs.readFileSync(STYLE_HISTORY_PATH, 'utf8'));
+  } catch {
+    return { recent: [] };
+  }
+}
+
+function writeStyleHistory(history) {
+  fs.writeFileSync(STYLE_HISTORY_PATH, `${JSON.stringify(history, null, 2)}\n`, 'utf8');
+}
+
+function chooseStyleDirection(mood) {
+  const directions = [
+    {
+      key: 'cinematic-afrofuturist',
+      label: 'cinematic afrofuturist worldbuilding',
+      artists: ['Syd Mead', 'Sun Ra album surrealism', 'Wanuri Kahiu mood language'],
+      traits: 'afrofuturist architecture, cinematic scale, radiant atmospherics, symbolic technology, elegant worldbuilding'
+    },
+    {
+      key: 'modernist-color-poetry',
+      label: 'modernist color poetry',
+      artists: ['Matisse', 'Paul Klee', 'Tarsila do Amaral'],
+      traits: 'bold color fields, lyrical abstraction, playful geometry, refined joy, graphic elegance'
+    },
+    {
+      key: 'dream-surreal-symbolist',
+      label: 'dream surreal symbolist',
+      artists: ['Dalí', 'Remedios Varo', 'Leonora Carrington'],
+      traits: 'surreal symbolism, strange dream logic, layered metaphor, luminous impossibility, poetic mystery'
+    },
+    {
+      key: 'textural-impressionist-light',
+      label: 'textural impressionist light',
+      artists: ['Monet', 'Sorolla', 'Emily Carr'],
+      traits: 'painterly atmosphere, shimmering light, living textures, expressive brush energy, natural lyricism'
+    },
+    {
+      key: 'street-mural-vibrance',
+      label: 'street mural vibrance',
+      artists: ['Os Gêmeos', 'Basquiat', 'Kobra'],
+      traits: 'urban poetry, vibrant mural rhythm, layered marks, expressive characters, playful visual pulse'
+    },
+    {
+      key: 'minimal-premium-architectural',
+      label: 'minimal premium architectural',
+      artists: ['Tadao Ando', 'James Turrell', 'Luis Barragán'],
+      traits: 'minimal serenity, architectural framing, clean forms, premium restraint, sculpted light'
+    },
+    {
+      key: 'fantasy-folk-organic',
+      label: 'fantasy folk organic',
+      artists: ['Miyazaki background mood', 'Gaudí', 'Arthur Rackham'],
+      traits: 'organic fantasy, storybook atmosphere, living forms, whimsical detail, intimate wonder'
+    }
+  ];
+
+  const history = readStyleHistory();
+  const recentKeys = new Set((history.recent || []).slice(-3).map((x) => x.key));
+  const pool = directions.filter((d) => !recentKeys.has(d.key));
+  const available = pool.length ? pool : directions;
+
+  const seed = Array.from(String(mood || '')).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  const picked = available[seed % available.length];
+  return { picked, history };
+}
+
 function buildPrompt(mood) {
-  return [
-    `Create an original digital artwork for this mood: "${mood}".`,
-    'Style: artful, expressive, emotionally rich, visually striking, and beautiful enough to elevate a room.',
-    'Lean toward imaginative fine-art energy rather than corporate illustration or predictable wallpaper.',
-    'Draw inspiration from surrealism, cubist boldness, architectural fantasy, lyrical street-art color, dreamlike symbolism, and emotionally intelligent visual poetry — the spirit of artists like Dalí, Picasso, Gaudí, Os Gêmeos, and other iconic expressive creators — without copying any single artwork or artist directly.',
-    'Prefer metaphor, symbolism, distortion, layered meaning, poetic color, and surprising composition over literal representation.',
-    'Allow the image to feel alive, inventive, warm, optimistic, and culturally rich when appropriate.',
-    'Avoid generic corporate scenes, obvious stock-like symbolism, bland motivational visuals, or overly literal depictions of the prompt.',
-    'Avoid defaulting to dark, muddy, obscure oil-painting aesthetics unless the mood clearly asks for something heavy or nocturnal.',
-    'Composition: strong focal poetry for a fullscreen TV display, with beauty, depth, and intrigue from a distance.',
-    'Lighting: luminous, graceful, and atmospheric, with expressive contrast and emotional color.',
-    'The result should feel like real art, not just a polished illustration.',
-    'Do not include text, logos, signatures, watermarks, or UI elements.'
-  ].join(' ');
+  const { picked, history } = chooseStyleDirection(mood);
+  const recentStyleText = (history.recent || []).slice(-3).map((x) => x.label).join(', ');
+  return {
+    prompt: [
+      `Create an original digital artwork for this mood: "${mood}".`,
+      `Primary visual direction: ${picked.label}.`,
+      `Use the spirit of these reference artists or creators for variation and energy: ${picked.artists.join(', ')}. Do not copy any single artwork directly.`,
+      `Key traits: ${picked.traits}.`,
+      'Create something that feels genuinely different from recent generations, with a fresh visual language, not a near-duplicate composition or palette.',
+      recentStyleText ? `Avoid drifting back into these recent style directions: ${recentStyleText}.` : '',
+      'Lean toward imaginative fine-art energy rather than corporate illustration or predictable wallpaper.',
+      'Prefer metaphor, symbolism, distortion, layered meaning, poetic color, and surprising composition over literal representation.',
+      'Allow the image to feel alive, inventive, warm, optimistic, and culturally rich when appropriate.',
+      'Avoid generic corporate scenes, obvious stock-like symbolism, bland motivational visuals, or overly literal depictions of the prompt.',
+      'Avoid defaulting to the same dark moody painterly look, the same centered composition, or the same visual recipe across generations.',
+      'Composition: strong focal poetry for a fullscreen TV display, with beauty, depth, and intrigue from a distance.',
+      'Lighting: expressive and atmospheric, but different each time depending on the chosen visual direction.',
+      'The result should feel like real art, not just a polished illustration.',
+      'Do not include text, logos, signatures, watermarks, or UI elements.'
+    ].filter(Boolean).join(' '),
+    styleDirection: picked,
+    history
+  };
 }
 
 function autoCaptionFromMood(mood) {
@@ -126,9 +204,10 @@ async function generateWithOpenAI({ mood, model, size, quality }) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error('OPENAI_API_KEY is not set');
 
+  const built = buildPrompt(mood);
   const body = {
     model,
-    prompt: buildPrompt(mood),
+    prompt: built.prompt,
     size,
     quality,
     output_format: 'png'
@@ -173,7 +252,8 @@ async function generateWithOpenAI({ mood, model, size, quality }) {
 
   return {
     imageUrl: `./generated/${filename}`,
-    engine: 'openai'
+    engine: 'openai',
+    styleDirection: built.styleDirection.label
   };
 }
 
@@ -183,8 +263,10 @@ async function main() {
 
   const now = new Date().toISOString();
 
+  const builtDirection = buildPrompt(parsed.mood);
   let finalImageUrl = parsed.imageUrl;
   let engine = 'manual';
+  let styleDirection = builtDirection.styleDirection?.label || 'manual';
 
   if (!finalImageUrl) {
     if (!parsed.forceFallback) {
@@ -197,6 +279,7 @@ async function main() {
         });
         finalImageUrl = generated.imageUrl;
         engine = generated.engine;
+        styleDirection = generated.styleDirection || styleDirection;
       } catch (err) {
         console.warn(`[update-mood] OpenAI generation failed, falling back to picsum: ${err.message}`);
       }
@@ -208,13 +291,25 @@ async function main() {
     }
   }
 
+  const history = readStyleHistory();
+  history.recent = [...(history.recent || []), {
+    key: (builtDirection.styleDirection && builtDirection.styleDirection.key) || slugify(styleDirection),
+    label: styleDirection,
+    mood: parsed.mood,
+    generatedAt: now,
+    imageUrl: finalImageUrl,
+    engine
+  }].slice(-6);
+  writeStyleHistory(history);
+
   const state = {
     mood: parsed.mood,
     caption: parsed.caption || autoCaptionFromMood(parsed.mood),
     imageUrl: finalImageUrl,
     updatedAt: now,
     command: parsed.command || `Mood: ${parsed.mood}`,
-    imageEngine: engine
+    imageEngine: engine,
+    styleDirection
   };
 
   fs.writeFileSync(STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, 'utf8');
@@ -224,6 +319,7 @@ async function main() {
   console.log(`- Caption: ${state.caption}`);
   console.log(`- Image: ${state.imageUrl}`);
   console.log(`- Engine: ${state.imageEngine}`);
+  console.log(`- Style: ${state.styleDirection}`);
   console.log(`- Updated: ${state.updatedAt}`);
 }
 
