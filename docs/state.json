@@ -1,13 +1,13 @@
 {
-  "mood": "launch momentum warm strategic elegance and fresh creative range",
-  "caption": "Launch Momentum",
-  "imageUrl": "https://picsum.photos/seed/launch-momentum-warm-strategic-elegance-and-fresh-creative-range/1920/1080",
-  "updatedAt": "2026-03-20T20:20:20.052Z",
-  "command": "Mood: launch momentum warm strategic elegance and fresh creative range",
-  "imageEngine": "fallback-picsum",
-  "styleDirection": "street mural vibrance",
-  "composition": "intimate close focus",
-  "palette": "moonlit neon palette",
-  "lighting": "backlit aura",
-  "renderMode": "graphic clean rendering"
+  "mood": "restored momentum after a long build day with calm confidence and night clarity",
+  "caption": "Restored Momentum",
+  "imageUrl": "./generated/1774329046321-restored-momentum-after-a-long-build-day-with-calm-confidence-and-night-clarity.png",
+  "updatedAt": "2026-03-24T05:09:55.495Z",
+  "command": "Mood: restored momentum after a long build day with calm confidence and night clarity",
+  "imageEngine": "openai",
+  "styleDirection": "dream surreal symbolist",
+  "composition": "totemic centered iconography",
+  "palette": "earth luxe palette",
+  "lighting": "nocturne luminous light",
+  "renderMode": "soft atmospheric rendering"
 }
