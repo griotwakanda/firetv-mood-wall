@@ -1,13 +1,13 @@
 {
-  "mood": "mission control clarity and focused execution",
-  "caption": "Mission Control",
-  "imageUrl": "./generated/1774402435416-mission-control-clarity-and-focused-execution.png",
-  "updatedAt": "2026-03-25T01:32:58.487Z",
-  "command": "Mood: mission control clarity and focused execution",
-  "imageEngine": "openai",
-  "styleDirection": "textural impressionist light",
-  "composition": "wide cinematic composition",
-  "palette": "tropical electric palette",
-  "lighting": "high-contrast dramatic light",
-  "renderMode": "mixed-media rendering"
+  "mood": "quiet precision and grounded momentum",
+  "caption": "Quiet Precision",
+  "imageUrl": "https://picsum.photos/seed/quiet-precision-and-grounded-momentum/1920/1080",
+  "updatedAt": "2026-03-25T23:32:34.080Z",
+  "command": "Mood: quiet precision and grounded momentum",
+  "imageEngine": "fallback-picsum",
+  "styleDirection": "cinematic afrofuturist worldbuilding",
+  "composition": "asymmetric tension",
+  "palette": "mineral cool palette",
+  "lighting": "golden-hour radiance",
+  "renderMode": "painterly rendering"
 }

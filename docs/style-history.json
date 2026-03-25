@@ -92,6 +92,23 @@
       "generatedAt": "2026-03-25T01:32:58.487Z",
       "imageUrl": "./generated/1774402435416-mission-control-clarity-and-focused-execution.png",
       "engine": "openai"
+    },
+    {
+      "key": "cinematic-afrofuturist",
+      "styleKey": "cinematic-afrofuturist",
+      "label": "cinematic afrofuturist worldbuilding",
+      "compositionKey": "asymmetric-tension",
+      "compositionLabel": "asymmetric tension",
+      "paletteKey": "mineral-cool",
+      "paletteLabel": "mineral cool palette",
+      "lightingKey": "golden-hour",
+      "lightingLabel": "golden-hour radiance",
+      "renderModeKey": "painterly",
+      "renderModeLabel": "painterly rendering",
+      "mood": "quiet precision and grounded momentum",
+      "generatedAt": "2026-03-25T23:32:34.080Z",
+      "imageUrl": "https://picsum.photos/seed/quiet-precision-and-grounded-momentum/1920/1080",
+      "engine": "fallback-picsum"
     }
   ]
 }
