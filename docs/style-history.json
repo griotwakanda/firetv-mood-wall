@@ -41,6 +41,57 @@
       "generatedAt": "2026-03-20T20:12:00.687Z",
       "imageUrl": "https://picsum.photos/seed/calm-focused-builder-momentum-with-depth/1920/1080",
       "engine": "fallback-picsum"
+    },
+    {
+      "key": "street-mural-vibrance",
+      "styleKey": "street-mural-vibrance",
+      "label": "street mural vibrance",
+      "compositionKey": "intimate-close-focus",
+      "compositionLabel": "intimate close focus",
+      "paletteKey": "moonlit-neon",
+      "paletteLabel": "moonlit neon palette",
+      "lightingKey": "backlit-aura",
+      "lightingLabel": "backlit aura",
+      "renderModeKey": "graphic-clean",
+      "renderModeLabel": "graphic clean rendering",
+      "mood": "launch momentum warm strategic elegance and fresh creative range",
+      "generatedAt": "2026-03-20T20:20:20.052Z",
+      "imageUrl": "https://picsum.photos/seed/launch-momentum-warm-strategic-elegance-and-fresh-creative-range/1920/1080",
+      "engine": "fallback-picsum"
+    },
+    {
+      "key": "dream-surreal-symbolist",
+      "styleKey": "dream-surreal-symbolist",
+      "label": "dream surreal symbolist",
+      "compositionKey": "totemic-centered",
+      "compositionLabel": "totemic centered iconography",
+      "paletteKey": "earth-luxe",
+      "paletteLabel": "earth luxe palette",
+      "lightingKey": "nocturne-luminous",
+      "lightingLabel": "nocturne luminous light",
+      "renderModeKey": "soft-atmospheric",
+      "renderModeLabel": "soft atmospheric rendering",
+      "mood": "restored momentum after a long build day with calm confidence and night clarity",
+      "generatedAt": "2026-03-24T05:09:55.495Z",
+      "imageUrl": "./generated/1774329046321-restored-momentum-after-a-long-build-day-with-calm-confidence-and-night-clarity.png",
+      "engine": "openai"
+    },
+    {
+      "key": "textural-impressionist-light",
+      "styleKey": "textural-impressionist-light",
+      "label": "textural impressionist light",
+      "compositionKey": "wide-cinematic",
+      "compositionLabel": "wide cinematic composition",
+      "paletteKey": "tropical-electric",
+      "paletteLabel": "tropical electric palette",
+      "lightingKey": "high-contrast",
+      "lightingLabel": "high-contrast dramatic light",
+      "renderModeKey": "mixed-media",
+      "renderModeLabel": "mixed-media rendering",
+      "mood": "mission control clarity and focused execution",
+      "generatedAt": "2026-03-25T01:32:58.487Z",
+      "imageUrl": "./generated/1774402435416-mission-control-clarity-and-focused-execution.png",
+      "engine": "openai"
     }
   ]
 }
